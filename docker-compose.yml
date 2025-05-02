@@ -1,0 +1,10 @@
+
+services:
+  web:
+    build: .
+    container_name: apache_server
+    ports:
+      - "9999:80"
+    volumes:
+      - ./dev/:/usr/local/apache2/htdocs/
+
