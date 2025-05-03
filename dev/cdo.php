@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 
-<?php include('login.php') ?>
-
 <!-- Main webpage -->
 <html lang='en'>
   <!-- Headers for the webpage -->
@@ -13,19 +11,19 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="style.css">
-    <title>22nd Company Homepage</title>
+    <title>CDO</title>
   </head>
 
   <!-- body of the webpage -->
   <body>
     <nav class="navbar navbar-expand navbar-dark bg-dark sticky-top">
-      <div class="container-fluid" id="navbarText">
-        <ul class="navbar-nav me-auto" id="navbar">
-          <li class="nav-item me-3">
-            <a href="index.php" class="btn btn-outline-primary">Home</a>
-          </li>
-        </ul>
-      </div>
+        <div class="container-fluid">
+            <ul class="navbar-nav me-auto" id="navbar">
+                <li class="nav-item me-3">
+                    <a href="index.php" class="btn btn-outline-primary">Home</a>
+                </li>
+            </ul>
+        </div>
     </nav>
 
     <!-- main content for the page -->
@@ -35,6 +33,5 @@
 
     <!-- scripts for the main webpage -->
     <script src="index.js"></script>
-
   </body>
 </html>
