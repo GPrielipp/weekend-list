@@ -36,7 +36,6 @@ function createLink(object, text) {
 
 	// set click fall back
 	link.addEventListener('click', (event) => {
-		console.log(`${text} button clicked`);
 		const app = document.getElementById('content');
 		app.clearChildren();
 		app.appendChild(object);
@@ -59,23 +58,19 @@ function generateLinks(navbar, user) {
 	 * - CDO: CDO
 	 * - CoC: COVIEW, CoC, PLT, SQD
 	 */
-	console.log('generating links for the user:', user);
 	permissions = user.permissions;
 	if (permissions & WEEKEND) {
-		console.log('creating link for the weekend list');
 		const form = new WeekendForm(user);
 		let link = createLink(form, 'Fill out the Weekend');
 		navbar.appendChild(link);
 	}
 
 	if (permissions & (COVIEW | CoC | PLT | SQD)) {
-		console.log('creating link for approving or viewing the weekend list');
 		let link = createLink(null, 'Approve / View');
 		navbar.appendChild(link);
 	}
 
 	if (permissions & CDO) {
-		console.log('creating link for the CDO');
 		let link = createLink(null, 'CDO');
 		navbar.appendChild(link);
 	}
@@ -117,9 +112,6 @@ function loadPage(window, event) {
 		goodLoad.innerText = 'Home button clicked';
 		container.appendChild(goodLoad);
 	});
-
-	console.log('Loaded the user');
 }
 
-// document.addEventListener('load', loadPage);
-loadPage(null, null);
+window.addEventListener('load', loadPage);
