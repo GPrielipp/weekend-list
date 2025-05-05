@@ -4,7 +4,7 @@ class DayInput extends HTMLElement {
 		super();
 		this.day = day;
 
-		this.classList.add('col');
+		this.classList.add(['col']);
 
 		// Day label
 		const title = document.createElement('h3');
@@ -14,11 +14,13 @@ class DayInput extends HTMLElement {
 		// to create a custom radio input
 		this.signing = this.createInput('signing', 'Signing');
 		this.weekend = this.createInput('weekend', 'Weekend');
-		this.MO_SRC = this.createInput('mo-src', 'MO / SRC');
+		this.mo = this.createInput('mo', 'MO');
+		this.src = this.createInput('src', 'SRC');
 
 		this.appendChild(this.signing);
 		this.appendChild(this.weekend);
-		this.appendChild(this.MO_SRC);
+		this.appendChild(this.mo);
+		this.appendChild(this.src);
 
 		this.selected = undefined;
 		this.select('signing');
@@ -103,9 +105,12 @@ class WeekendForm extends HTMLElement {
 		this.modalBody.appendChild(row);
 
 		// take down the user's weekend plans
-		this.plans = document.createElement('input');
-		this.plans.type = 'text';
-		this.plans.placeholder = 'Weekend plans';
+		this.plans = document.createElement('div');
+		// this.plans.type = 'text';
+		this.plans.contentEditable = true;
+		this.plans.id = 'weekend-plans-input';
+		this.plans.innerText = 'Weekend plans';
+		this.plans.classList.add(['input-lg']);
 		this.modalBody.appendChild(this.plans);
 
 		// get MO information
