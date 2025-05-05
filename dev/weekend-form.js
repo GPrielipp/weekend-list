@@ -1,20 +1,60 @@
 // gets input for a given day
 class DayInput extends HTMLElement {
-	constructor(day) {
+	constructor(day, callbackOnChange) {
 		super();
+		this.day = day;
+
 		this.classList.add('col');
-		const p = document.createElement('p');
-		p.innerText = day;
-		this.appendChild(p);
+
+		// Day label
+		const title = document.createElement('h3');
+		title.innerText = day;
+		this.appendChild(title);
+
+		// to create a custom radio input
+		this.signing = this.createInput('signing', 'Signing');
+		this.weekend = this.createInput('weekend', 'Weekend');
+		this.MO_SRC = this.createInput('mo-src', 'MO / SRC');
+
+		this.appendChild(this.signing);
+		this.appendChild(this.weekend);
+		this.appendChild(this.MO_SRC);
+
+		this.selected = undefined;
+		this.select('signing');
+	}
+
+	createInput(id, text) {
+		const input = document.createElement('p');
+		input.classList.add(['row-input']);
+		input.id = `${id}-${this.day}`;
+		input.innerText = text;
+
+		input.addEventListener('click', (event) => {
+			this.select(id);
+		});
+
+		return input;
+	}
+
+	// mark the clicked input as selected
+	select(id) {
+		const next = this.querySelector(`#${id}-${this.day}`);
+
+		if (this.selected !== undefined) {
+			this.selected.classList.toggle('selected');
+		}
+
+		this.selected = next;
+		this.selected.classList.toggle('selected');
 	}
 }
 
 // does the weekend list
 class WeekendForm extends HTMLElement {
-	constructor(user) {
+	constructor(user, longWeekend = false) {
 		super();
 		this.classList.add(['container']);
-		this.tabIndex = -1;
 
 		// outermost dialog div
 		this.modalDialog = document.createElement('div');
@@ -40,12 +80,14 @@ class WeekendForm extends HTMLElement {
 		// define the form
 		this.userInfo = document.createElement('div');
 		this.userInfo.classList.add(['row']);
-		this.userInfo.appendChild(this.createCol(`${user.lname}, ${user.fname}`));
 		this.userInfo.appendChild(
-			this.createCol(`PLT-SQD: ${user.platoon}-${user.squad}`)
+			this.createCol(`<b>${user.lname}</b>, ${user.fname}`)
 		);
 		this.userInfo.appendChild(
-			this.createCol(`Weekend count: ${user.weekendCount}`)
+			this.createCol(`PLT-SQD: <b>${user.platoon}-${user.squad}</b>`)
+		);
+		this.userInfo.appendChild(
+			this.createCol(`Weekend count: <b>${user.weekendCount}</b>`)
 		);
 
 		this.modalBody.appendChild(this.userInfo);
@@ -54,6 +96,7 @@ class WeekendForm extends HTMLElement {
 		const row = document.createElement('div');
 		row.classList.add('row');
 		this.dayInputs = [new DayInput('Friday'), new DayInput('Saturday')];
+		if (longWeekend) this.dayInputs.push(new DayInput('Sunday'));
 		this.dayInputs.forEach((input) => {
 			row.appendChild(input);
 		});
@@ -85,9 +128,9 @@ class WeekendForm extends HTMLElement {
 	}
 
 	createCol(text) {
-		const col = document.createElement('div');
+		const col = document.createElement('p');
 		col.classList.add(['col']);
-		col.innerText = text;
+		col.innerHTML = text;
 		return col;
 	}
 }

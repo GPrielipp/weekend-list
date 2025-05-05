@@ -1,3 +1,16 @@
-h1 {
-	color: blue;
+/* unchecked state */
+.row-input {
+	/* remove the circle */
+	appearance: none;
+	background-color: #b8b8b8;
+	color: black;
+	padding: 10px;
+	border-radius: 5px;
+	user-select: none;
+}
+
+/* checked state */
+.selected {
+	background-color: #e75a5a;
+	color: white;
 }
