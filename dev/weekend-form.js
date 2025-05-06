@@ -286,25 +286,23 @@ class WeekendForm extends HTMLElement {
 			this.srcform.style.display = 'block';
 		}
 		// hide the forms
-		else {
-			const moVisible = this.moform.style.display != 'none';
-			const srcVisible = this.srcform.style.display != 'none';
-			let moSelected = false;
-			let srcSelected = false;
+		const moVisible = this.moform.style.display != 'none';
+		const srcVisible = this.srcform.style.display != 'none';
+		let moSelected = false;
+		let srcSelected = false;
 
-			this.dayInputs.forEach((input) => {
-				let status = input.getStatus();
-				if (status == 'mo') moSelected = true;
-				else if (status == 'src') srcSelected = true;
-			});
+		this.dayInputs.forEach((input) => {
+			let status = input.getStatus();
+			if (status == 'mo') moSelected = true;
+			else if (status == 'src') srcSelected = true;
+		});
 
-			// hide the forms
-			if (moVisible && !moSelected) {
-				this.moform.style.display = 'none';
-			}
-			if (srcVisible && !srcSelected) {
-				this.srcform.style.display = 'none';
-			}
+		// hide the forms
+		if (moVisible && !moSelected) {
+			this.moform.style.display = 'none';
+		}
+		if (srcVisible && !srcSelected) {
+			this.srcform.style.display = 'none';
 		}
 	}
 
