@@ -82,7 +82,7 @@ function getUser() {
 		alpha: 265112,
 		fname: 'George',
 		lname: 'Prielipp',
-		permissions: WEEKEND | COVIEW | CoC,
+		permissions: WEEKEND | SQD | CDO,
 		company: 22,
 		platoon: 4,
 		squad: 3,
@@ -96,6 +96,7 @@ function getUser() {
 function loadPage(window, event) {
 	// get the user
 	const user = getUser(); // this will come from somewhere else later
+	console.log(user);
 
 	// generate the links based on permissions
 	const navbar = document.getElementById('navbar');

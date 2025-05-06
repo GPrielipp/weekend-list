@@ -83,11 +83,33 @@ class MOForm extends HTMLElement {
 customElements.define('mo-form', MOForm);
 MOForm.constructor = customElements.get('mo-form');
 
+// get input for an SRC
+class SRCForm extends HTMLElement {
+    constructor() {
+        super();
+
+        // get the src link
+        this.link = document.createElement('input');
+        this.link.type = 'text';
+        this.link.placeholder = 'SRC Link';
+
+        this.appendChild(this.link);
+
+        // get the dates for the SRC
+        this.dateForm = new DateForm();
+
+        this.appendChild(this.dateForm);
+    }
+}
+customElements.define('src-form', SRCForm);
+SRCForm.constructor = customElements.get('src-form');
+
 // gets input for a given day
 class DayInput extends HTMLElement {
 	constructor(day, callbackOnChange) {
 		super();
 		this.day = day;
+		this.callbackOnChange = callbackOnChange;
 
 		this.classList.add(['col']);
 
@@ -115,6 +137,7 @@ class DayInput extends HTMLElement {
 		const input = document.createElement('p');
 		input.classList.add(['row-input']);
 		input.id = `${id}-${this.day}`;
+		input.name = id;
 		input.innerText = text;
 
 		input.addEventListener('click', (event) => {
@@ -134,6 +157,12 @@ class DayInput extends HTMLElement {
 
 		this.selected = next;
 		this.selected.classList.toggle('selected');
+
+		this.callbackOnChange(this.getStatus());
+	}
+
+	getStatus() {
+		return this.selected.name;
 	}
 }
 
@@ -182,11 +211,23 @@ class WeekendForm extends HTMLElement {
 
 		this.modalBody.appendChild(this.userInfo);
 
-		// TODO -- new input type for the days
+		// Get the input for their status per day
 		const row = document.createElement('div');
 		row.classList.add('row');
-		this.dayInputs = [new DayInput('Friday'), new DayInput('Saturday')];
-		if (longWeekend) this.dayInputs.push(new DayInput('Sunday'));
+		this.dayInputs = [
+			new DayInput('Friday', (status) => {
+				this.updateFormVisibility(status);
+			}),
+			new DayInput('Saturday', (status) => {
+				this.updateFormVisibility(status);
+			}),
+		];
+		if (longWeekend)
+			this.dayInputs.push(
+				new DayInput('Sunday', (status) => {
+					this.updateFormVisibility(status);
+				})
+			);
 		this.dayInputs.forEach((input) => {
 			row.appendChild(input);
 		});
@@ -202,10 +243,14 @@ class WeekendForm extends HTMLElement {
 		this.modalBody.appendChild(this.plans);
 
 		// get MO information
-		// provide logic and callback functions to add or remove this portion if it's not needed
 		this.moform = new MOForm();
+		this.moform.style.display = 'none';
 		this.modalBody.appendChild(this.moform);
+
 		// get SRC information
+		this.srcform = new SRCForm();
+		this.srcform.style.display = 'none';
+		this.modalBody.appendChild(this.srcform);
 
 		// submit/save the form
 		const submitBtn = document.createElement('button');
@@ -221,6 +266,46 @@ class WeekendForm extends HTMLElement {
 
 		console.log('Submitting the form');
 		console.log('Weekend plans are:');
+	}
+
+	updateFormVisibility(status) {
+		// the definition of things are a little off
+		if (
+			this.moform == undefined ||
+			this.srcform == undefined ||
+			this.dayInputs == undefined
+		)
+			return;
+
+		// show the mo form
+		if (status == 'mo' && this.moform.style.display == 'none') {
+			this.moform.style.display = 'block';
+		}
+		// show the src form
+		else if (status == 'src' && this.srcform.style.display == 'none') {
+			this.srcform.style.display = 'block';
+		}
+		// hide the forms
+		else {
+			const moVisible = this.moform.style.display != 'none';
+			const srcVisible = this.srcform.style.display != 'none';
+			let moSelected = false;
+			let srcSelected = false;
+
+			this.dayInputs.forEach((input) => {
+				let status = input.getStatus();
+				if (status == 'mo') moSelected = true;
+				else if (status == 'src') srcSelected = true;
+			});
+
+			// hide the forms
+			if (moVisible && !moSelected) {
+				this.moform.style.display = 'none';
+			}
+			if (srcVisible && !srcSelected) {
+				this.srcform.style.display = 'none';
+			}
+		}
 	}
 
 	createCol(text) {
