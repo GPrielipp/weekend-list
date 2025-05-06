@@ -1,3 +1,88 @@
+// form to get a depart and return date for an MO or SRC
+class DateForm extends HTMLElement {
+	constructor() {
+		super();
+
+		// define the form here
+		const row = document.createElement('div');
+		row.classList.add(['row']);
+
+		this.appendChild(row);
+
+		// get the date they depart
+		const departsDiv = document.createElement('div');
+		departsDiv.classList.add(['col-sm']);
+
+		this.departs = document.createElement('input');
+		this.departs.type = 'date';
+		this.departs.id = 'departs';
+		this.departs.name = 'departs';
+		this.departs.classList.add(['mx-3']);
+
+		const departsLabel = document.createElement('label');
+		departsLabel.for = 'departs';
+		departsLabel.innerText = 'Departs:';
+
+		departsDiv.appendChild(departsLabel);
+		departsDiv.appendChild(this.departs);
+
+		row.appendChild(departsDiv);
+
+		// get the date they return
+		const returnsDiv = document.createElement('div');
+		returnsDiv.classList.add(['col-sm']);
+
+		this.returns = document.createElement('input');
+		this.returns.type = 'date';
+		this.returns.id = 'returns';
+		this.returns.name = 'returns';
+		this.returns.classList.add(['mx-3']);
+
+		const returnsLabel = document.createElement('label');
+		returnsLabel.for = 'returns';
+		returnsLabel.innerText = 'Returns:';
+
+		returnsDiv.appendChild(returnsLabel);
+		returnsDiv.appendChild(this.returns);
+
+		row.appendChild(returnsDiv);
+	}
+}
+// registers the object so it can be instantiated and will show up on the page
+customElements.define('date-form', DateForm);
+DateForm.constructor = customElements.get('date-form');
+
+// get input for an MO
+class MOForm extends HTMLElement {
+	constructor() {
+		super();
+
+		this.classList.add(['row']);
+
+		// get the MO code
+		this.code = document.createElement('input');
+		this.code.type = 'text';
+		this.code.placeholder = 'MO Code';
+		this.code.classList.add(['col']);
+
+		this.appendChild(this.code);
+
+		// get the MO organization
+		this.organization = document.createElement('input');
+		this.organization.type = 'text';
+		this.organization.placeholder = 'MO Organization';
+		this.organization.classList.add(['col']);
+
+		this.appendChild(this.organization);
+
+		this.dateForm = new DateForm();
+
+		this.appendChild(this.dateForm);
+	}
+}
+customElements.define('mo-form', MOForm);
+MOForm.constructor = customElements.get('mo-form');
+
 // gets input for a given day
 class DayInput extends HTMLElement {
 	constructor(day, callbackOnChange) {
@@ -51,6 +136,9 @@ class DayInput extends HTMLElement {
 		this.selected.classList.toggle('selected');
 	}
 }
+
+customElements.define('day-input', DayInput);
+DayInput.constructor = customElements.get('day-input');
 
 // does the weekend list
 class WeekendForm extends HTMLElement {
@@ -114,6 +202,9 @@ class WeekendForm extends HTMLElement {
 		this.modalBody.appendChild(this.plans);
 
 		// get MO information
+		// provide logic and callback functions to add or remove this portion if it's not needed
+		this.moform = new MOForm();
+		this.modalBody.appendChild(this.moform);
 		// get SRC information
 
 		// submit/save the form
@@ -142,6 +233,3 @@ class WeekendForm extends HTMLElement {
 
 customElements.define('weekend-form', WeekendForm);
 WeekendForm.constructor = customElements.get('weekend-form');
-
-customElements.define('day-input', DayInput);
-DayInput.constructor = customElements.get('day-input');

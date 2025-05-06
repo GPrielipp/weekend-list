@@ -38,3 +38,15 @@ day-input h3 {
 #weekend-plans-input:hover {
 	background-color: rgb(241, 241, 241);
 }
+
+/* space inputs away from each other */
+mo-form input[type='text'] {
+	margin: 0.25rem 0.5rem;
+	min-width: 250px;
+}
+
+/* separate the date label from the input */
+date-form * {
+	margin-top: 0.25rem;
+	margin-bottom: 0.25rem;
+}
