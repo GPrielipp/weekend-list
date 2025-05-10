@@ -2,9 +2,21 @@
 services:
   web:
     build: .
+    depends_on:
+      - db
+    restart: always
     container_name: apache_server
     ports:
       - "9999:80"
     volumes:
-      - ./dev/:/usr/local/apache2/htdocs/
+      - ./dev/:/var/www/html
 
+  db:
+    build: .
+    image: sqlite3:3.44.2
+    container_name: sqlite_server
+    volumes: 
+      - ./db/:/var/lib/mysql
+
+volumes:
+  db:

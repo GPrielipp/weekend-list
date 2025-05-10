@@ -60,7 +60,7 @@ def create_database(data):
     # now, parsing all of the data, then writing it is rather memory inefficient...
     # whatever
     # connect to the database (creates it if it doesn't exist)
-    with (conn := sqlite3.connect('weekend-list.db')):
+    with (conn := sqlite3.connect('./db/weekend-list.db')):
         # get the cursor to write to the database
         cursor = conn.cursor()
 

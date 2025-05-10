@@ -57,7 +57,43 @@ class="container"
 id="content"
 >
 <p>Page loaded</p>
+<button id="clickme">CLICK ME</button>
 </div>
 
 	</body>
+	<script>
+		const app = document.getElementById("clickme");
+
+		app.addEventListener('click', (el, ev) => {
+			console.log('Fetching data');
+
+			fetch('api/query.php', {
+				method: 'POST', 
+				headers: {'Content-Type': 'application/json'}, 
+				body: JSON.stringify({
+					action: 'querySquad', 
+					COMPANY: 22, 
+					PLATOON: 4,
+					SQUAD: 3,
+					LAST: 'Prielipp', 
+			})})
+			.then(resp => {
+				console.log(resp.body);
+				if (resp.status == 200) return resp.json();
+			})
+			// .then(blob => blob.text())
+			.then(data => {
+				console.log(data.results);
+				const page = document.getElementById('content');
+				page.childNodes = [];
+				data.results.forEach( obj => {
+					const row = document.createElement('div');
+					console.log(obj);
+					row.innerText = `${obj.LAST_NAME}, ${obj.FIRST_NAME} ${obj.PLATOON}-${obj.SQUAD} ${obj.WEEKEND_COUNT}`;
+					page.appendChild(row);
+				});
+			})
+		});
+
+	</script>
 </html>
