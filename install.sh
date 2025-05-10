@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 # create the database if it doesn't exist
-if [ ! -f sqlite.db ]; then
+if [ ! -f weekend-list.db ]; then
     echo "creating the database"
 
     if [ ! -d .py-env ]; then
