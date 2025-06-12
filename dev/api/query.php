@@ -38,6 +38,10 @@ switch ($request['action'])
         $cmd = 'SELECT * FROM users WHERE COMPANY = :company AND PLATOON = :platoon AND SQUAD = :squad';
         queryDB($db, $cmd, $request);
         break;
+    case 'authenticate':
+        $cmd = 'SELECT * FROM users WHERE ALPHA = :alpha AND LAST_NAME = :last_name AND FIRST_NAME = :first_name';
+        queryDB($db, $cmd, $request);
+        break;
     default:
         $cmd = 'SELECT * FROM users WHERE LAST_NAME = :last_name';
         queryDB($db, $cmd, $request);
@@ -51,6 +55,8 @@ function queryDB($db, $cmd, $request) {
     $query->bindParam(":platoon", $request['PLATOON'], SQLITE3_INTEGER);
     $query->bindParam(":squad", $request['SQUAD'], SQLITE3_INTEGER);
     $query->bindParam(":last_name", $request['LAST'], SQLITE3_TEXT);
+    $query->bindParam(":first_name", $request['FIRST'], SQLITE3_TEXT);
+    $query->bindParam(":alpha", $request['ALPHA'], SQLITE3_INTEGER);
 
     $data = $query->execute();
     $results = [];
@@ -58,7 +64,14 @@ function queryDB($db, $cmd, $request) {
         $results[] = $row;
     }
 
-    echo json_encode(['status' => 'success', 'results' => $results]);
+    if (count(($results)) > 0)
+    {
+        echo json_encode(['status' => 'success', 'results' => $results]);
+    }
+    else
+    {
+        echo json_encode(['status' => 'bad_query']);
+    }
 }
 
 ?>

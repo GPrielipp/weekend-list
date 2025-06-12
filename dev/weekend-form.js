@@ -206,7 +206,7 @@ class WeekendForm extends HTMLElement {
 			this.createCol(`PLT-SQD: <b>${user.platoon}-${user.squad}</b>`)
 		);
 		this.userInfo.appendChild(
-			this.createCol(`Weekend count: <b>${user.weekendCount}</b>`)
+			this.createCol(`Weekend count: <b>${user.weekend_count}</b>`)
 		);
 
 		this.modalBody.appendChild(this.userInfo);
@@ -261,11 +261,11 @@ class WeekendForm extends HTMLElement {
 		this.modalBody.appendChild(submitBtn);
 	}
 
+	// publish the updated weekend list
 	submit(event, form) {
-		// use form as if it were "this"
-
 		console.log('Submitting the form');
 		console.log('Weekend plans are:');
+		console.log(this.plans.innerText);
 	}
 
 	updateFormVisibility(status) {

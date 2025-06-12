@@ -5,6 +5,8 @@ const SQD = 0b000100;
 const CDO = 0b000010;
 const WEEKEND = 0b000001;
 
+const context = new Context();
+
 // import { WeekendForm } from './weekend-form';
 
 // make sure this custom function is always defined
@@ -13,7 +15,7 @@ if (typeof Element.prototype.clearChildren === 'undefined') {
 	Object.defineProperty(Element.prototype, 'clearChildren', {
 		configurable: true,
 		enumerable: false,
-		value: function() {
+		value: function () {
 			while (this.firstChild) this.removeChild(this.lastChild);
 		},
 	});
@@ -76,26 +78,10 @@ function generateLinks(navbar, user) {
 	}
 }
 
-function getUser() {
-	// load the user
-	const user = {
-		alpha: 265112,
-		fname: 'George',
-		lname: 'Prielipp',
-		permissions: WEEKEND | SQD | CDO,
-		company: 22,
-		platoon: 4,
-		squad: 3,
-		phone: 9894924119,
-		weekendCount: 12,
-		spiritPasses: 0,
-	};
-	return user;
-}
-
-function loadPage(window, event) {
+async function loadPage(window, event) {
 	// get the user
-	const user = getUser(); // this will come from somewhere else later
+	await context.authenticate('George', 'Prielipp', '265112'); // get this info from a login screen
+	const user = context.getUser();
 	console.log(user);
 
 	// generate the links based on permissions
