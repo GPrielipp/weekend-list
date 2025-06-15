@@ -1,10 +1,3 @@
-const COVIEW = 0b100000;
-const CoC = 0b010000;
-const PLT = 0b001000;
-const SQD = 0b000100;
-const CDO = 0b000010;
-const WEEKEND = 0b000001;
-
 const context = new Context();
 
 // import { WeekendForm } from './weekend-form';
@@ -68,7 +61,8 @@ function generateLinks(navbar, user) {
 	}
 
 	if (permissions & (COVIEW | CoC | PLT | SQD)) {
-		let link = createLink(null, 'Approve / View');
+		const page = new ApproveViewPage(user);
+		let link = createLink(page, 'Approve / View');
 		navbar.appendChild(link);
 	}
 
@@ -80,9 +74,8 @@ function generateLinks(navbar, user) {
 
 async function loadPage(window, event) {
 	// get the user
-	await context.authenticate('George', 'Prielipp', '265112'); // get this info from a login screen
+	await context.authenticate('Andrew', 'Comlish', '261260'); // get this info from a login screen
 	const user = context.getUser();
-	console.log(user);
 
 	// generate the links based on permissions
 	const navbar = document.getElementById('navbar');
@@ -90,14 +83,16 @@ async function loadPage(window, event) {
 
 	// update the content on the page
 	const container = document.getElementById('content');
+	const savedHomepage = Array.from(container.childNodes); // create a copy
 
 	// make sure the home button is able to clear the container
 	const homebutton = document.getElementById('home');
 	homebutton.addEventListener('click', (event) => {
 		container.clearChildren();
-		const goodLoad = document.createElement('h1');
-		goodLoad.innerText = 'Home button clicked';
-		container.appendChild(goodLoad);
+		console.log(container);
+		savedHomepage.forEach((child) => {
+			container.appendChild(child);
+		});
 	});
 }
 

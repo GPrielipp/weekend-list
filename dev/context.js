@@ -1,3 +1,10 @@
+const COVIEW = 0b100000;
+const CoC = 0b010000;
+const PLT = 0b001000;
+const SQD = 0b000100;
+const CDO = 0b000010;
+const WEEKEND = 0b000001;
+
 class User {
 	constructor(data) {
 		// unpack the data
@@ -12,16 +19,54 @@ class User {
 		this.weekend_count = data.WEEKEND_COUNT;
 		this.spirit_passes = data.SPIRIT_PASSES;
 		this.verified = false;
+
+		this.entries = [];
+	}
+
+	async loadEntries() {
+		let level;
+
+		if (this.permissions & (COVIEW | CoC)) {
+			level = 'Company';
+		} else if (this.permissions & PLT) {
+			level = 'Platoon';
+		} else if (this.permissions & SQD) {
+			level = 'Squad';
+		} else {
+			throw new Error('do not have permission to load entries');
+		}
+
+		let result = await fetch('api/query.php', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				action: `query${level}`,
+				COMPANY: this.company,
+				PLATOON: this.platoon,
+				SQUAD: this.squad,
+				LAST: this.lname,
+			}),
+		})
+			.then((data) => data.json())
+			.then((json) => json.results);
+
+		this.entries = result;
+	}
+
+	getEntries() {
+		return this.entries;
 	}
 
 	/**
 	 * load information about the user from the backend
 	 */
-	static loadInfo(data) {
+	static async loadInfo(data) {
 		if (data == undefined) return undefined;
 		else {
 			this.verified = true;
-			return new User(data);
+			let user = new User(data);
+			await user.loadEntries();
+			return user;
 		}
 	}
 
@@ -65,7 +110,7 @@ class Context {
 	 */
 	async authenticate(fname, lname, alpha) {
 		let val = await User.authenticate(fname, lname, alpha);
-		this.user = User.loadInfo(val);
+		this.user = await User.loadInfo(val);
 	}
 
 	getUser() {
