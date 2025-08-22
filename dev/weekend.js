@@ -8,6 +8,9 @@ class WeekendEntry extends HTMLElement {
 		// add classes for this <object data="" type=""></object>
 		// get approval status in coming feature
 
+		// TODO - get the weekend entry
+		this.person.weekendPlans = "something, blah blah blah. I'm so cool";
+
 		this.isClosed = true;
 
 		this.appendChild(this.display());
@@ -84,10 +87,21 @@ class WeekendEntry extends HTMLElement {
 		let title = this.createTitle();
 		main.appendChild(title);
 
-		let text = document.createElement('p');
-		text.classList.add(['event-row']);
-		text.innerText = `approve this? - coming feature`;
-		main.appendChild(text);
+		// create the approve functionality
+		let row = document.createElement('p');
+		row.classList.add(['event-row']);
+		row.innerText = `${this.person.weekendPlans}`;
+
+		// add an approve button to the row
+		let approveBtn = document.createElement('button');
+		approveBtn.innerText = `${this.person.approved ? 'Deny' : 'Approve'}`;
+		approveBtn.onclick = (event) => {
+			this.person.approved = !this.person.approved; // toggle if they are approved or not
+			console.log(this.person);
+		};
+		row.appendChild(approveBtn);
+
+		main.appendChild(row);
 
 		return main;
 	}

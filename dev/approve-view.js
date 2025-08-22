@@ -5,7 +5,18 @@ class ApproveViewPage extends HTMLElement {
 		// add classes for this object
 
 		// get the data from the user
-		this.entries = user.getEntries().map((entry) => new WeekendEntry(entry));
+		this.entries = user
+			.getEntries()
+			.map((entry) => {
+				// makes it so the user cannot approve themself (it has to be someone higher than them)
+				if (entry.ALPHA != user.alpha) {
+					return new WeekendEntry(entry);
+				}
+				return undefined;
+			})
+			.filter((entry) => {
+				return entry !== undefined;
+			});
 		this.expandedEntry = undefined;
 
 		// add click event listeners
