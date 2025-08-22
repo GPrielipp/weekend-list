@@ -97,7 +97,6 @@ class WeekendEntry extends HTMLElement {
 		approveBtn.innerText = `${this.person.approved ? 'Deny' : 'Approve'}`;
 		approveBtn.onclick = (event) => {
 			this.person.approved = !this.person.approved; // toggle if they are approved or not
-			console.log(this.person);
 		};
 		row.appendChild(approveBtn);
 
