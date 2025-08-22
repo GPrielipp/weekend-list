@@ -5,6 +5,10 @@ if [ ! -d ./db/ ]; then
     mkdir db
 fi
 
+if [ ! -d ./entries/ ]; then
+    mkdir entries
+fi
+
 if [ ! -f ./db/weekend-list.db ]; then
     echo "creating the database"
 

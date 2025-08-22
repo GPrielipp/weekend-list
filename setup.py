@@ -56,7 +56,7 @@ def parse_csv(fn):
     return data
 
 # take the formatted data and put it into a database
-def create_database(data):
+def create_user_database(data):
     # now, parsing all of the data, then writing it is rather memory inefficient...
     # whatever
     # connect to the database (creates it if it doesn't exist)
@@ -104,7 +104,32 @@ def create_database(data):
         # save the changes
         conn.commit()
 
-    print('[create_database] database initialized')
+    print('[create_user_database] database initialized')
+
+# stores weekend entries - can have multiple entries per user, but only one per week
+def create_entry_database():
+    # connect to the database (creates it if it doesn't exist)
+    with (conn := sqlite3.connect('./db/weekend-entries.db')):
+        # get the cursor to write to the database
+        cursor = conn.cursor()
+
+        # create the table
+        # custom "date" form for separating by the week
+        # ALPHA-YEAR-WEEK
+        # ex: 123456-2000-13
+        # same format for the json files containing the data
+        cmd =   '''
+                CREATE TABLE entries (
+                    ALPHA INT NOT NULL,
+                    WEEK INT NOT NULL,
+                    ALPHA_YEAR_WEEK CHAR(14) NOT NULL,
+                    PRIMARY KEY (ALPHA_YEAR_WEEK)
+                );
+                '''
+        
+        cursor.execute(cmd)
+
+    print('[create_entry_database] database initialized')
 
 if __name__ == '__main__':
     # make sure the csv file exists
@@ -116,5 +141,6 @@ if __name__ == '__main__':
     data = parse_csv(csvpath)
 
     # create the database
-    create_database(data)
+    create_user_database(data)
+    create_entry_database()
         
