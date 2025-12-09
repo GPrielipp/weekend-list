@@ -39,6 +39,39 @@ services:
     networks:
       - weekend-list
     
+  api:
+    build:
+      context: ./backend
+    container_name: php
+    ports:
+     - "8000:80"
+    volumes:
+      - ./backend:/var/www/html
+    depends_on:
+      - sql
+    networks:
+      - weekend-list
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: pma
+    restart: always
+    environment:
+      # CRITICAL: This must match the name of your database SERVICE
+      PMA_HOST: sql
+      PMA_PORT: 3306
+      # Optional: Allows you to log in without typing the server name manually
+      PMA_ARBITRARY: 1
+    ports:
+      - "8080:80"
+    depends_on:
+      - sql
+    networks:
+      - weekend-list
+
 volumes:
   db:
 

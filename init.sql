@@ -1,4 +1,8 @@
 CREATE DATABASE IF NOT EXISTS weekend_db;
+
+GRANT ALL PRIVILEGES ON weekend_db.* TO 'docker'@'%';
+FLUSH PRIVILEGES;
+
 USE weekend_db;
 
 -- 1. COMPANY INFO
@@ -44,3 +48,30 @@ CREATE TABLE IF NOT EXISTS admin_info (
     
     FOREIGN KEY (alpha) REFERENCES company_info(alpha)
 );
+
+-- ... (Your CREATE TABLE statements go above here) ...
+
+-- 4. SEED DATA: COMPANY INFO (Users)
+-- We need users first so the other tables can reference their 'alpha'
+INSERT INTO company_info (alpha, first_name, last_name, platoon, squad, permissions) VALUES 
+('24001', 'John', 'Doe', 1, 1, 'user'),
+('24002', 'Jane', 'Smith', 1, 2, 'user'),
+('24003', 'Mike', 'Ross', 2, 1, 'user'),
+('99999', 'Admin', 'Chief', 0, 0, 'admin');
+
+-- 5. SEED DATA: ADMIN INFO (The Weekend Settings)
+-- Setting up the upcoming weekend parameters
+INSERT INTO admin_info (alpha, weekend_start, weekend_end) VALUES 
+('99999', '2023-11-10 16:00:00', '2023-11-12 18:00:00');
+
+-- 6. SEED DATA: WEEKEND ENTRIES (Liberty Plans)
+-- Populate some realistic entries linking back to the users above
+INSERT INTO weekend_entries (alpha, mo, src, plans, status, extended_eol, transportation_method, address_type, address, distance, approved, for_weekend) VALUES 
+-- Entry 1: Pending approval, going far
+('24001', '555-0101', 'Phone', 'Going home to visit parents', 'Pending', TRUE, 'POV', 'Home', '123 Maple St, Springfield, VA', 150, FALSE, '2023-11-10'),
+
+-- Entry 2: Approved, staying local
+('24002', '555-0102', 'Text', 'Staying on base, study groups', 'Approved', FALSE, 'None', 'Barracks', 'Building 400', 0, TRUE, '2023-11-10'),
+
+-- Entry 3: Unapproved/Draft
+('24003', '555-0103', 'Email', 'Trip to NYC', 'Pending', TRUE, 'Train', 'Hotel', '45 5th Ave, New York, NY', 220, FALSE, '2023-11-10');
