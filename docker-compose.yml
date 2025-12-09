@@ -1,22 +1,47 @@
-
 services:
   web:
-    build: .
-    depends_on:
-      - db
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile 
     restart: always
-    container_name: apache_server
+    stdin_open: true
+    container_name: react
     ports:
-      - "9999:80"
+      - "3000:3000"
     volumes:
-      - ./dev/:/var/www/html
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      NODE_ENV: development
+      WATCHPACK_POLLING: "true"
+      WDS_SOCKET_PORT: 0
+    command: npm start
+    networks:
+      - weekend-list
+    depends_on:
+      - sql
 
-  db:
-    build: .
-    image: sqlite3:3.44.2
-    container_name: sqlite_server
-    volumes: 
-      - ./db/:/var/lib/mysql
-
+  sql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASS}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
+    ports:
+      - "3306:3306"
+    volumes:
+      - db:/var/lib/mysql
+      # initialize the tables if nothing is there
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: always
+    networks:
+      - weekend-list
+    
 volumes:
   db:
+
+networks:
+  weekend-list:
+    driver: bridge
